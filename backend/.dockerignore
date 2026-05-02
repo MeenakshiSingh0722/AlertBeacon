@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+.git
+.gitignore
+Dockerfile
+README.md
+*.db
+*.log
+.pytest_cache/
+alembic/versions/*.pyc

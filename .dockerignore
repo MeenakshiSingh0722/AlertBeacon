@@ -1,0 +1,11 @@
+.git
+.venv
+node_modules
+**/node_modules/
+**/__pycache__/
+*.db
+.env
+AlertBeacon/
+AlertBeacon_Blueprint.md
+AlertBeacon_PRD.md
+DOCKER_GUIDE.md

@@ -1,12 +1,10 @@
 import json
-import logging
 import asyncio
 from typing import List
 from fastapi import WebSocket
 from redis.asyncio import Redis
+from loguru import logger
 from app.config import settings
-
-logger = logging.getLogger(__name__)
 
 class WebSocketService:
     def __init__(self):

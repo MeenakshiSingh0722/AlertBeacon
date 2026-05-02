@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "default_secret_key"
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
+    DEMO_MODE: bool = False
     
     DATABASE_URL: str = "sqlite+aiosqlite:///./alertbeacon.db"
     POSTGRES_URL: str = "postgresql+asyncpg://postgres:postgres@db:5432/alertbeacon"

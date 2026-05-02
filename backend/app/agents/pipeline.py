@@ -10,7 +10,7 @@ from app.services.dedup_service import dedup_service
 from app.services.claude_service import claude_service
 from app.services.geocoding_service import geocoding_service
 from app.services.notification_service import notification_service
-from app.utils.severity_scorer import score_from_claude_factors
+from app.utils.severity_scorer import score_from_ai_factors
 from app.database import AsyncSessionLocal
 from app.models.incident import Incident, IncidentStatus
 from app.models.agent_log import AgentLog, AgentStatus

@@ -1,13 +1,12 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
-from app.agents.pipeline import pipeline_service
-from typing import Dict, Any
-
+from typing import Dict, Any, Any as TAny
+from fastapi import APIRouter, HTTPException, Depends
 from app.api.deps import require_admin
+from app.agents.pipeline import pipeline_service
 
 router = APIRouter(prefix="/pipeline", tags=["Pipeline"])
 
 @router.post("/run-once")
-async def run_pipeline_once(current_user: any = Depends(require_admin)):
+async def run_pipeline_once(current_user: TAny = Depends(require_admin)) -> Any:
     """
     Triggers a manual run of the data acquisition and analysis pipeline.
     Returns the processing summary once complete.

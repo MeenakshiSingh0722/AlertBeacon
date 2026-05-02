@@ -3,9 +3,9 @@ import json
 from typing import List, Dict, Any
 from sqlalchemy import select
 from app.database import AsyncSessionLocal
-from app.models.user import User
-from app.models.incident import Incident
-from app.models.alert import Alert, AlertType, AlertStatus
+from app.models.user import User, UserRole
+from app.models.incident import Incident, SeverityLabel
+from app.models.alert import AlertNotification, AlertType, AlertStatus
 from app.models.agent_log import AgentLog, AgentStatus
 from app.config import settings
 
@@ -24,14 +24,17 @@ class NotificationService:
         alerts_created = 0
         
         async with AsyncSessionLocal() as session:
-            # 1. Fetch all potential notification recipients (NGOs and Responders)
-            # In a large system, you'd filter this query more aggressively.
-            result = await session.execute(select(User))
+            # 1. Fetch all active recipients with notification preferences.
+            result = await session.execute(
+                select(User).where(User.role.in_([UserRole.NGO, UserRole.RESPONDER]), User.is_active == True)
+            )
             users = result.scalars().all()
+            matched_user_ids: List[str] = []
             
             for user in users:
-                if await self._should_notify(user, incident):
-                    # Create Alert Records for each preferred channel
+                decision = await self._should_notify(user, incident)
+                if decision["notify"]:
+                    matched_user_ids.append(str(user.id))
                     prefs = user.notification_prefs or {}
                     channels = prefs.get("channels", ["email"]) # Default to email
                     
@@ -55,7 +58,7 @@ class NotificationService:
                 agent_name="NotificationEngine",
                 action="process_incident",
                 input_data={"incident_id": str(incident.id)},
-                output_data={"alerts_created": alerts_created},
+                output_data={"alerts_created": alerts_created, "matched_users": matched_user_ids},
                 status=AgentStatus.SUCCESS
             )
             session.add(log)
@@ -63,42 +66,52 @@ class NotificationService:
             
         logger.info(f"Notification processing complete. Created {alerts_created} alerts.")
 
-    async def _should_notify(self, user: User, incident: Incident) -> bool:
+    async def _should_notify(self, user: User, incident: Incident) -> Dict[str, Any]:
         """
         Matching logic based on user preferences.
         """
         prefs = user.notification_prefs or {}
-        
+        if not getattr(user, "is_active", True):
+            return {"notify": False, "reason": "inactive_account"}
+
         # 1. Category match
         pref_categories = prefs.get("categories", [])
         if pref_categories and str(incident.category) not in pref_categories:
-            return False
-            
+            return {"notify": False, "reason": "category_mismatch"}
+
         # 2. Severity threshold
         min_severity = prefs.get("min_severity", 0.0)
-        if incident.severity_score < min_severity:
-            return False
-            
+        if isinstance(min_severity, str):
+            label_order = {
+                SeverityLabel.LOW.value: 0.0,
+                SeverityLabel.MEDIUM.value: 1.0,
+                SeverityLabel.HIGH.value: 2.0,
+                SeverityLabel.CRITICAL.value: 3.0,
+            }
+            min_severity = label_order.get(min_severity.lower(), 0.0)
+
+        if incident.severity_score < float(min_severity):
+            return {"notify": False, "reason": "severity_below_threshold"}
+
         # 3. Coverage area match (Loose matching)
         coverage = user.coverage_area or {}
         if coverage:
-            # Simple check: if location_name is in user's coverage list or string match
+            location_name = incident.location_name or ""
             allowed_locations = coverage.get("locations", [])
             if allowed_locations:
-                match = any(loc.lower() in incident.location_name.lower() for loc in allowed_locations)
+                match = any(loc.lower() in location_name.lower() for loc in allowed_locations)
                 if not match:
-                    return False
-            
-            # Simple radius check if center and radius are defined
-            center = coverage.get("center") # [lat, lng]
+                    return {"notify": False, "reason": "coverage_location_mismatch"}
+
+            center = coverage.get("center")
             radius = coverage.get("radius_km")
-            if center and radius and incident.latitude and incident.longitude:
+            if center and radius and incident.latitude is not None and incident.longitude is not None:
                 from geopy.distance import geodesic
                 dist = geodesic(center, (incident.latitude, incident.longitude)).km
                 if dist > radius:
-                    return False
+                    return {"notify": False, "reason": "coverage_radius_mismatch"}
 
-        return True
+        return {"notify": True, "reason": "matched"}
 
     async def _send_notification(self, user: User, incident: Incident, channel: AlertType):
         """

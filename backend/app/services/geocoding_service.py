@@ -1,11 +1,9 @@
 import time
-import logging
+from loguru import logger
 from typing import Dict, Any, Optional, Tuple
 from geopy.geocoders import Nominatim
 from geopy.exc import GeopyError
 from app.config import settings
-
-logger = logging.getLogger(__name__)
 
 class GeocodingService:
     def __init__(self):

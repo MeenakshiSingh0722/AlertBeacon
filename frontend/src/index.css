@@ -2,22 +2,205 @@
 @tailwind components;
 @tailwind utilities;
 
+/* AlertBeacon — Soft Sachet-inspired Light Blue Theme
+   All colors are HSL. No raw colors in components.
+*/
+
 @layer base {
-  body {
-    @apply bg-background text-gray-100;
+  :root {
+    /* Surfaces */
+    --background: 210 60% 98%;
+    --foreground: 215 35% 18%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 35% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 35% 18%;
+
+    /* Brand — Sachet blue */
+    --primary: 214 88% 42%;
+    --primary-foreground: 210 60% 98%;
+    --primary-soft: 214 90% 94%;
+    --primary-glow: 214 100% 60%;
+
+    --secondary: 210 50% 95%;
+    --secondary-foreground: 215 35% 22%;
+
+    --muted: 210 40% 94%;
+    --muted-foreground: 215 18% 46%;
+
+    --accent: 195 85% 92%;
+    --accent-foreground: 215 35% 22%;
+
+    --destructive: 0 78% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 213 35% 88%;
+    --input: 213 35% 88%;
+    --ring: 214 88% 52%;
+
+    --radius: 0.85rem;
+
+    /* Severity scale (soft, government-portal feel) */
+    --severity-critical: 0 78% 55%;
+    --severity-critical-soft: 0 85% 96%;
+    --severity-high: 25 92% 55%;
+    --severity-high-soft: 25 95% 95%;
+    --severity-medium: 42 92% 50%;
+    --severity-medium-soft: 45 95% 94%;
+    --severity-low: 145 60% 42%;
+    --severity-low-soft: 145 60% 94%;
+    --severity-info: 214 88% 50%;
+    --severity-info-soft: 214 90% 95%;
+
+    /* Status */
+    --success: 145 60% 42%;
+    --warning: 42 92% 50%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(214 88% 48%), hsl(200 90% 52%));
+    --gradient-soft: linear-gradient(180deg, hsl(210 60% 99%), hsl(210 70% 96%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(210 80% 96%) 0%, hsl(210 60% 98%) 60%);
+
+    /* Shadows */
+    --shadow-soft: 0 1px 2px hsl(214 50% 60% / 0.06), 0 4px 16px hsl(214 60% 50% / 0.06);
+    --shadow-card: 0 1px 3px hsl(214 40% 50% / 0.08), 0 8px 24px hsl(214 50% 40% / 0.08);
+    --shadow-glow: 0 0 0 4px hsl(214 90% 60% / 0.12);
+
+    /* Sidebar */
+    --sidebar-background: 214 60% 99%;
+    --sidebar-foreground: 215 30% 25%;
+    --sidebar-primary: 214 88% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 70% 95%;
+    --sidebar-accent-foreground: 214 88% 32%;
+    --sidebar-border: 213 35% 90%;
+    --sidebar-ring: 214 88% 52%;
+  }
+
+  .dark {
+    --background: 215 40% 10%;
+    --foreground: 210 40% 96%;
+    --card: 215 35% 13%;
+    --card-foreground: 210 40% 96%;
+    --popover: 215 35% 13%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 214 90% 60%;
+    --primary-foreground: 215 40% 10%;
+    --primary-soft: 214 50% 22%;
+    --secondary: 215 30% 18%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 215 30% 18%;
+    --muted-foreground: 215 18% 65%;
+    --accent: 200 60% 22%;
+    --accent-foreground: 210 40% 96%;
+    --border: 215 30% 22%;
+    --input: 215 30% 22%;
+    --ring: 214 90% 60%;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html, body, #root {
+    min-height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background-image: var(--gradient-hero);
+    background-attachment: fixed;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Rajdhani', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
 }
-::-webkit-scrollbar-track {
-  @apply bg-background;
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-border rounded-2xl;
+    box-shadow: var(--shadow-card);
+  }
+  .glass-card:hover {
+    border-color: hsl(var(--primary) / 0.35);
+  }
+  .soft-card {
+    @apply bg-card border border-border rounded-2xl;
+    box-shadow: var(--shadow-soft);
+  }
+  .brand-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .severity-dot {
+    @apply inline-block w-2.5 h-2.5 rounded-full;
+    box-shadow: 0 0 0 4px hsl(var(--background));
+  }
+  .live-dot {
+    @apply inline-block w-2 h-2 rounded-full bg-success;
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
 }
-::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
+
+@layer utilities {
+  .bg-success { background-color: hsl(var(--success)); }
+  .text-success { color: hsl(var(--success)); }
+  .text-warning { color: hsl(var(--warning)); }
+
+  .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+  }
 }
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-700;
+
+/* Animations */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--success) / 0.6); opacity: 1; }
+  50% { box-shadow: 0 0 0 6px hsl(var(--success) / 0); opacity: 0.7; }
 }
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up { animation: fade-up 0.4s ease-out both; }
+.animate-pulse-ring { animation: pulse-ring 1.6s ease-out infinite; }
+.animate-ticker { animation: ticker-scroll 40s linear infinite; }
+
+/* Leaflet popup styling to match theme */
+.leaflet-popup-content-wrapper {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-card) !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content { margin: 14px 16px !important; font-family: inherit !important; }
+.leaflet-popup-tip { background: hsl(var(--card)) !important; }
+.leaflet-container { font-family: inherit !important; background: hsl(var(--muted)) !important; }
+.leaflet-bar a {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+.leaflet-bar a:hover { background: hsl(var(--accent)) !important; }

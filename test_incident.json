@@ -1,0 +1,10 @@
+{
+  "title": "Manual Crisis",
+  "description": "Manually created crisis for testing.",
+  "category": "safety",
+  "severity_score": 8.5,
+  "severity_label": "critical",
+  "location_name": "Test Location",
+  "latitude": 10.0,
+  "longitude": 20.0
+}

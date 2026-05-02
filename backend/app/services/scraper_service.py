@@ -1,7 +1,7 @@
 import asyncio
 import httpx
 import feedparser
-import logging
+from loguru import logger
 from datetime import datetime
 from typing import List, Dict, Any
 from sqlalchemy import select, update
@@ -10,8 +10,6 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from app.models.source import DataSource, SourceHealthStatus
 from app.database import AsyncSessionLocal
-
-logger = logging.getLogger(__name__)
 
 class ScraperService:
     def __init__(self):

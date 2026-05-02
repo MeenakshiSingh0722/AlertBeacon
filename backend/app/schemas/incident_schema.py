@@ -16,7 +16,7 @@ class IncidentBase(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     affected_count: Optional[int] = None
-    confidence_score: float = 0.0
+    confidence_score: Optional[float] = None
     tags: List[str] = []
     ai_summary: Optional[str] = None
 

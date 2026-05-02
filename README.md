@@ -43,3 +43,31 @@ celery -A app.tasks.celery_app beat --loglevel=info
 - **AI Intelligence:** Claude-powered classification and severity scoring.
 - **Real-time Map:** Live incident updates via WebSockets.
 - **NGO Notifications:** Targeted alerts based on organization preferences.
+
+## Production Deployment
+
+For production environments, use the dedicated production compose file:
+
+1. Prepare your production environment variables:
+   ```bash
+   cp .env.prod.example .env.prod
+   # Edit .env.prod with your production keys and passwords
+   ```
+
+2. Start the production stack:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d --build
+   ```
+
+3. Initialize the database:
+   ```bash
+   docker-compose -f docker-compose.prod.yml exec backend alembic upgrade head
+   ```
+
+The production setup includes:
+- **Nginx:** Serving built static frontend files and proxying API/WS requests.
+- **Gunicorn:** Production-grade WSGI server for the FastAPI backend.
+- **PostgreSQL:** Persistent database for incidents and user data.
+- **Redis:** Message broker for Celery and WebSocket broadcasting.
+- **Health Checks:** Automatic service monitoring.
+

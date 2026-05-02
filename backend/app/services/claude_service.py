@@ -1,11 +1,9 @@
 import json
-import logging
+from loguru import logger
 from typing import Dict, Any, Optional
 from anthropic import AsyncAnthropic
 from tenacity import retry, stop_after_attempt, wait_exponential
 from app.config import settings
-
-logger = logging.getLogger(__name__)
 
 class ClaudeService:
     def __init__(self):

@@ -1,28 +1,28 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Enum, ForeignKey
+from sqlalchemy import Column, String, DateTime, Enum, ForeignKey, Text
 from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 import enum
 
 class AlertType(str, enum.Enum):
+    POPUP = "popup"
     EMAIL = "email"
     SMS = "sms"
-    PUSH = "push"
-    WEBHOOK = "webhook"
+    DASHBOARD = "dashboard"
 
 class AlertStatus(str, enum.Enum):
+    PENDING = "pending"
     SENT = "sent"
     FAILED = "failed"
     READ = "read"
 
-class Alert(Base):
-    __tablename__ = "alerts"
+class AlertNotification(Base):
+    __tablename__ = "alert_notifications"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     incident_id = Column(UUID(as_uuid=True), ForeignKey("incidents.id"), nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     alert_type = Column(Enum(AlertType), nullable=False)
-    sent_at = Column(DateTime, default=datetime.utcnow)
-    status = Column(Enum(AlertStatus), default=AlertStatus.SENT)
-    response_action = Column(String(255), nullable=True)
+    status = Column(Enum(AlertStatus), default=AlertStatus.PENDING)
+    message = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

@@ -10,13 +10,15 @@ class SourceType(str, enum.Enum):
     NEWS = "news"
     SOCIAL = "social"
     MANUAL = "manual"
+    DEMO = "demo"
 
 class Category(str, enum.Enum):
     MEDICAL = "medical"
     FOOD = "food"
     SHELTER = "shelter"
-    INFRASTRUCTURE = "infra"
+    INFRASTRUCTURE = "infrastructure"
     SAFETY = "safety"
+    OTHER = "other"
 
 class SeverityLabel(str, enum.Enum):
     LOW = "low"
@@ -27,6 +29,7 @@ class SeverityLabel(str, enum.Enum):
 class IncidentStatus(str, enum.Enum):
     NEW = "new"
     ACTIVE = "active"
+    RESPONDING = "responding"
     RESOLVED = "resolved"
 
 class Incident(Base):
@@ -37,7 +40,7 @@ class Incident(Base):
     description = Column(Text, nullable=True)
     raw_content = Column(Text, nullable=True)
     source_url = Column(String(1000), nullable=True)
-    source_type = Column(Enum(SourceType), default=SourceType.RSS)
+    source_type = Column(Enum(SourceType), default=SourceType.MANUAL)
     category = Column(Enum(Category), nullable=True)
     severity_score = Column(Float, default=0.0)
     severity_label = Column(Enum(SeverityLabel), default=SeverityLabel.LOW)
@@ -46,9 +49,9 @@ class Incident(Base):
     latitude = Column(DECIMAL(10, 8), nullable=True)
     longitude = Column(DECIMAL(11, 8), nullable=True)
     affected_count = Column(Integer, nullable=True)
-    confidence_score = Column(Float, default=0.0)
-    tags = Column(JSON, default=list)
+    confidence_score = Column(Float, nullable=True)
     ai_summary = Column(Text, nullable=True)
+    urgency_keywords = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     resolved_at = Column(DateTime, nullable=True)

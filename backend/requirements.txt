@@ -8,6 +8,7 @@ alembic
 redis
 python-dotenv
 loguru
+gunicorn
 aiosqlite
 celery
 flower
