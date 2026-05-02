@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlertBeacon WebSocket Test</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #1a1a1a; color: #eee; }
+        #messages { border: 1px solid #444; height: 400px; overflow-y: scroll; padding: 10px; background: #000; border-radius: 4px; }
+        .message { margin-bottom: 10px; padding: 5px; border-bottom: 1px solid #333; font-family: monospace; }
+        .status { margin-bottom: 10px; font-weight: bold; }
+        .incident { color: #ff4d4d; }
+        .ping { color: #4dff4d; }
+    </style>
+</head>
+<body>
+    <h1>AlertBeacon Real-time Monitor</h1>
+    <div id="status" class="status">Connecting...</div>
+    <div id="messages"></div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const statusDiv = document.getElementById('status');
+        
+        // Connect to WebSocket
+        const socket = new WebSocket('ws://localhost:8000/api/v1/ws/incidents');
+
+        socket.onopen = () => {
+            statusDiv.textContent = 'Status: Connected';
+            statusDiv.style.color = '#4dff4d';
+            console.log('Connected to WebSocket');
+            
+            // Start heartbeat
+            setInterval(() => {
+                socket.send('ping');
+                logMessage('Sent: ping', 'ping');
+            }, 30000);
+        };
+
+        socket.onmessage = (event) => {
+            const data = event.data;
+            if (data === 'pong') {
+                logMessage('Received: pong', 'ping');
+            } else {
+                try {
+                    const json = JSON.parse(data);
+                    logMessage(`Incident Created: ${json.data.title} (${json.data.severity_label})`, 'incident');
+                    console.log('Incident Data:', json);
+                } catch (e) {
+                    logMessage(`Raw Message: ${data}`);
+                }
+            }
+        };
+
+        socket.onclose = () => {
+            statusDiv.textContent = 'Status: Disconnected';
+            statusDiv.style.color = '#ff4d4d';
+        };
+
+        socket.onerror = (error) => {
+            logMessage(`Error: ${error.message}`);
+        };
+
+        function logMessage(text, className = '') {
+            const div = document.createElement('div');
+            div.className = 'message ' + className;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+            messagesDiv.prepend(div);
+        }
+    </script>
+</body>
+</html>
