@@ -1,73 +1,59 @@
-# AlertBeacon Monorepo
+# 🚨 AlertBeacon: Autonomous AI Crisis Command Center
 
-Autonomous AI-driven crisis detection and alerting platform.
+AlertBeacon is a state-of-the-art, real-time emergency management dashboard designed to provide instantaneous intelligence during global and local crises. Powered by Gemini LLMs and a high-frequency data harvesting pipeline, AlertBeacon transforms raw sensor data into actionable life-saving insights.
 
-## Project Structure
-- `backend/`: FastAPI, SQLAlchemy, CrewAI, and Claude AI agents.
-- `frontend/`: React + Vite dashboard with Leaflet maps.
-- `docker-compose.yml`: Infrastructure orchestration.
-- `nginx.conf`: Reverse proxy for routing API and Frontend.
+![AlertBeacon Dashboard](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2070)
 
-## Quick Start
+## 🌟 Key Features
 
-### 1. Setup Environment
-Copy `.env.example` to `.env` in the root and fill in your API keys (Anthropic, Mapbox, etc.).
+### 🧠 Sentinel AI Pipeline
+*   **Data Harvesting:** Scrapes USGS, Google News, and social feeds every 500ms.
+*   **LLM Classification:** Uses Google Gemini models to categorize incidents by category (Safety, Health, Shelter) and severity (Critical, High, Medium, Low).
+*   **Autonomous Analysis:** High-impact analysis sequence that simulates satellite syncing and sentiment scanning for every local detection.
 
-### 2. Start Services
-```bash
-docker-compose up --build
-```
+### 📍 Intelligent Geolocation
+*   **Near Me:** Proximity-based monitoring that focuses on threats within a 5km radius of the user's GPS coordinates.
+*   **India National Feed:** Specialized tracking for major Indian metros and disaster-prone zones.
+*   **Global Command Map:** Real-time leaflet-based visualization of worldwide emergencies with high-contrast "Dark Matter" styling.
 
-### 3. Access the Platform
-- **Frontend:** `http://localhost`
-- **API Docs:** `http://localhost/api/v1/docs`
-- **Task Monitor (Flower):** `http://localhost:5555`
+### 🌑 Professional "Systemic" UI
+*   **High-Contrast Mode:** Optimized for emergency command rooms with a strict Pure Black (#000000) and Pure White (#ffffff) aesthetic.
+*   **Dynamic Notification Engine:** Instant visual and audio cues for high-severity threats.
+*   **Fully Responsive:** Seamlessly scales from desktop command walls to mobile field devices.
 
-## Background Tasks (Celery)
-The system uses Celery for periodic tasks:
-- **Pipeline:** Runs every 5 minutes to scrape and analyze data.
-- **Health Checks:** Validates data sources every 15 minutes.
-- **Cleanup:** Removes old agent logs daily.
+## 🚀 Tech Stack
 
-To run Celery locally without Docker (requires Redis):
-```bash
-cd backend
-# Start Worker
-celery -A app.tasks.celery_app worker --loglevel=info
-# Start Beat
-celery -A app.tasks.celery_app beat --loglevel=info
-```
+*   **Frontend:** React 18, Vite, Tailwind CSS, Lucide Icons, Leaflet Maps.
+*   **Backend:** FastAPI (Python), SQLAlchemy, PostgreSQL.
+*   **AI Engine:** Google Gemini (Generative AI), NLTK.
+*   **Real-time:** WebSockets for instant incident propagation.
+*   **Infrastructure:** Docker, Celery (for background scraping), Redis.
 
-## Features
-- **Autonomous Scraping:** Periodic RSS/News data collection.
-- **AI Intelligence:** Claude-powered classification and severity scoring.
-- **Real-time Map:** Live incident updates via WebSockets.
-- **NGO Notifications:** Targeted alerts based on organization preferences.
+## 🛠️ Installation
 
-## Production Deployment
+### Prerequisites
+*   Docker & Docker Compose
+*   Python 3.10+
+*   Node.js 18+
 
-For production environments, use the dedicated production compose file:
-
-1. Prepare your production environment variables:
+### Quick Start (Docker)
+1. Clone the repository:
    ```bash
-   cp .env.prod.example .env.prod
-   # Edit .env.prod with your production keys and passwords
+   git clone https://github.com/MeenakshiSingh0722/AlertBeacon.git
+   cd AlertBeacon
    ```
-
-2. Start the production stack:
+2. Build and run the stack:
    ```bash
-   docker-compose -f docker-compose.prod.yml up -d --build
+   docker-compose up --build
    ```
+3. Access the dashboard at `http://localhost:5173`.
 
-3. Initialize the database:
-   ```bash
-   docker-compose -f docker-compose.prod.yml exec backend alembic upgrade head
-   ```
+## 📖 How It Works
 
-The production setup includes:
-- **Nginx:** Serving built static frontend files and proxying API/WS requests.
-- **Gunicorn:** Production-grade WSGI server for the FastAPI backend.
-- **PostgreSQL:** Persistent database for incidents and user data.
-- **Redis:** Message broker for Celery and WebSocket broadcasting.
-- **Health Checks:** Automatic service monitoring.
+1.  **Ingestion:** Sentinel agents pull raw data from global sensors.
+2.  **AI Analysis:** The raw text is passed through the LLM Analysis Pipeline.
+3.  **Broadcast:** Verified crises are pushed via WebSockets to all active Command Centers.
+4.  **Action:** Users receive localized alerts and can initiate SOS protocols.
 
+---
+Developed with ❤️ by the AlertBeacon Team. Monitoring for a safer tomorrow.

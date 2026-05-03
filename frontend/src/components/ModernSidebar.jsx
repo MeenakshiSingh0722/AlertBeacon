@@ -125,7 +125,7 @@ const ModernSidebar = () => {
             className="text-gray-400 hover:text-white hover:bg-gray-700/50 p-2 rounded-lg transition-all duration-200"
             aria-label={isMobile ? "Close menu" : "Minimize sidebar"}
           >
-            {isMobile ? <X className="h-5 w-5" : <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${isMinimized ? 'rotate-180' : ''}`} />}
+            {isMobile ? <X className="h-5 w-5" /> : <ChevronLeft className={`h-5 w-5 transition-transform duration-300 ${isMinimized ? 'rotate-180' : ''}`} />}
           </button>
         </div>
 
