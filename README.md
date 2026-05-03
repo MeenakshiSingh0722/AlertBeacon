@@ -54,5 +54,9 @@ AlertBeacon is a state-of-the-art, real-time emergency management dashboard desi
 3.  **Broadcast:** Verified crises are pushed via WebSockets to all active Command Centers.
 4.  **Action:** Users receive localized alerts and can initiate SOS protocols.
 
----
-Developed with ❤️ by the AlertBeacon Team. Monitoring for a safer tomorrow.
+
+demo video of project AlertBeacon:
+
+
+https://github.com/user-attachments/assets/50df9a64-fa64-4f53-a40f-aefd0d015d45
+
