@@ -58,5 +58,9 @@ AlertBeacon is a state-of-the-art, real-time emergency management dashboard desi
 demo video of project AlertBeacon:
 
 
-https://github.com/user-attachments/assets/50df9a64-fa64-4f53-a40f-aefd0d015d45
+
+
+https://github.com/user-attachments/assets/e0b3917f-d544-4ef3-99e4-58a218fada03
+
+
 
