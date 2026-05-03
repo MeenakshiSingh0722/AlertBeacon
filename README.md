@@ -2,7 +2,6 @@
 
 AlertBeacon is a state-of-the-art, real-time emergency management dashboard designed to provide instantaneous intelligence during global and local crises. Powered by Gemini LLMs and a high-frequency data harvesting pipeline, AlertBeacon transforms raw sensor data into actionable life-saving insights.
 
-![AlertBeacon Dashboard](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2070)
 
 ## 🌟 Key Features
 
